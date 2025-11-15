@@ -42,9 +42,9 @@ export function BlockNavigationPlugin({
         const isHeading = element && $isHeadingNode(element);
 
         if (isHeading) {
-          // Headings are single-line, always create new paragraph block
+          // Convert heading to paragraph, stay in same block
           event?.preventDefault();
-          onCreateNewBlock();
+          $setBlocksType(selection, () => $createParagraphNode());
           return true;
         }
 
@@ -52,19 +52,34 @@ export function BlockNavigationPlugin({
         const isCodeBlock = element && $isCodeNode(element);
 
         if (isCodeBlock) {
-          // For code blocks, only exit if the ENTIRE block is empty
+          // For code blocks, check if current line is empty to exit
           const textContent = element.getTextContent();
-          const isEntireBlockEmpty = textContent.trim().length === 0;
+          const offset = anchor.offset;
 
-          if (isEntireBlockEmpty) {
-            // Empty code block - convert to paragraph
+          // Find the current line by looking at text before and after cursor
+          const textBeforeCursor = textContent.substring(0, offset);
+          const textAfterCursor = textContent.substring(offset);
+
+          // Get the current line content
+          const lastNewlineBeforeCursor = textBeforeCursor.lastIndexOf('\n');
+          const firstNewlineAfterCursor = textAfterCursor.indexOf('\n');
+
+          const lineStart = lastNewlineBeforeCursor === -1 ? 0 : lastNewlineBeforeCursor + 1;
+          const lineEnd = firstNewlineAfterCursor === -1
+            ? textContent.length
+            : offset + firstNewlineAfterCursor;
+
+          const currentLineText = textContent.substring(lineStart, lineEnd);
+          const isCurrentLineEmpty = currentLineText.trim().length === 0;
+
+          if (isCurrentLineEmpty) {
+            // Empty line in code block - exit to paragraph in same block
             event?.preventDefault();
             $setBlocksType(selection, () => $createParagraphNode());
             return true;
           }
 
-          // Code block has content - insert line break within code block
-          // We need to explicitly handle this to prevent creating new blocks
+          // Current line has text - insert newline within code block
           event?.preventDefault();
           selection.insertText('\n');
           return true;
