@@ -5,7 +5,6 @@ import {
   KEY_ENTER_COMMAND,
   $getSelection,
   $isRangeSelection,
-  $getRoot,
 } from 'lexical';
 import { $isHeadingNode } from '@lexical/rich-text';
 
@@ -46,21 +45,15 @@ export function BlockNavigationPlugin({
           return true;
         }
 
-        // For multiline components (paragraphs, lists, etc.)
-        const root = $getRoot();
-        const children = root.getChildren();
-        const textContent = root.getTextContent();
+        // For multiline components (paragraphs, lists, code, quotes, etc.)
+        // Only create a new block if the CURRENT LINE is empty
 
-        // Check if editor is empty or has only whitespace
-        const isEmpty = textContent.trim().length === 0;
+        // Get the current element's text content
+        const currentElementText = element?.getTextContent() || '';
+        const isCurrentLineEmpty = currentElementText.trim().length === 0;
 
-        // Check if we're at the end of the content
-        const isAtEnd = anchor.offset === anchorNode.getTextContentSize();
-        const isLastNode = children.length > 0 &&
-                          children[children.length - 1] === element;
-
-        if (isEmpty || (isAtEnd && isLastNode)) {
-          // Empty last line or pressing enter on empty editor
+        if (isCurrentLineEmpty) {
+          // Current line is empty, create new block
           event?.preventDefault();
           if (isLastBlock) {
             onCreateNewBlock();
@@ -70,7 +63,8 @@ export function BlockNavigationPlugin({
           return true;
         }
 
-        // Allow default multiline behavior (create new paragraph within block)
+        // Current line has text, allow default multiline behavior
+        // This will create a new paragraph/line within the same block
         return false;
       },
       COMMAND_PRIORITY_LOW
