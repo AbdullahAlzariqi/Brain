@@ -46,7 +46,7 @@
   font-size: 15px;
 }
 
-/* Lexical Editor */
+/* TipTap Editor */
 .editor-input {
   min-height: 20px;
   resize: none;
@@ -56,7 +56,7 @@
   caret-color: #f5eef6;
 }
 
-.editor-paragraph {
+.editor-input p {
   margin: 0;
   padding: 0;
   color: #d5d6f6;
@@ -64,7 +64,7 @@
 }
 
 /* Headings */
-.editor-heading-h1 {
+.editor-input h1 {
   font-size: 32px;
   font-weight: 700;
   margin: 0;
@@ -73,7 +73,7 @@
   line-height: 1.3;
 }
 
-.editor-heading-h2 {
+.editor-input h2 {
   font-size: 26px;
   font-weight: 600;
   margin: 0;
@@ -82,7 +82,7 @@
   line-height: 1.3;
 }
 
-.editor-heading-h3 {
+.editor-input h3 {
   font-size: 20px;
   font-weight: 600;
   margin: 0;
@@ -91,7 +91,7 @@
   line-height: 1.4;
 }
 
-.editor-heading-h4 {
+.editor-input h4 {
   font-size: 18px;
   font-weight: 600;
   margin: 0;
@@ -100,7 +100,7 @@
   line-height: 1.4;
 }
 
-.editor-heading-h5 {
+.editor-input h5 {
   font-size: 16px;
   font-weight: 600;
   margin: 0;
@@ -108,7 +108,7 @@
   line-height: 1.5;
 }
 
-.editor-heading-h6 {
+.editor-input h6 {
   font-size: 14px;
   font-weight: 600;
   margin: 0;
@@ -117,23 +117,23 @@
 }
 
 /* Text Formatting */
-.editor-text-bold {
+.editor-input strong {
   font-weight: 600;
 }
 
-.editor-text-italic {
+.editor-input em {
   font-style: italic;
 }
 
-.editor-text-underline {
+.editor-input u {
   text-decoration: underline;
 }
 
-.editor-text-strikethrough {
+.editor-input s {
   text-decoration: line-through;
 }
 
-.editor-text-code {
+.editor-input code {
   background-color: #252727;
   padding: 2px 6px;
   border-radius: 4px;
@@ -144,24 +144,20 @@
 }
 
 /* Lists */
-.editor-list-ol,
-.editor-list-ul {
+.editor-input ul,
+.editor-input ol {
   margin: 0;
   padding-left: 24px;
   color: #d5d6f6;
 }
 
-.editor-listitem {
+.editor-input li {
   margin: 4px 0;
   line-height: 1.6;
 }
 
-.editor-nested-listitem {
-  list-style-type: none;
-}
-
 /* Quote */
-.editor-quote {
+.editor-input blockquote {
   margin: 0;
   padding-left: 16px;
   border-left: 4px solid #2e33d1;
@@ -171,7 +167,7 @@
 }
 
 /* Code Block */
-.editor-code {
+.editor-input pre {
   background-color: #191A1A;
   border: 2px solid #3e4242;
   border-radius: 24px;
@@ -183,7 +179,13 @@
   color: #d0d2d2;
   margin: 8px 0;
   white-space: pre-wrap;
-  display: block;
+}
+
+.editor-input pre code {
+  background: none;
+  border: none;
+  padding: 0;
+  color: inherit;
 }
 
 /* Code Syntax Highlighting */
