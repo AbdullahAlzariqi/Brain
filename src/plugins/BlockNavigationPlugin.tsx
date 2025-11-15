@@ -38,32 +38,49 @@ export function BlockNavigationPlugin({
         const anchorNode = anchor.getNode();
         const element = anchorNode.getTopLevelElement();
 
-        // Check if we're in a heading (single-line component)
+        // Check if we're in a heading or code block
         const isHeading = element && $isHeadingNode(element);
-
-        if (isHeading) {
-          // Headings are single-line, always create new paragraph block
-          event?.preventDefault();
-          onCreateNewBlock();
-          return true;
-        }
-
-        // Check if we're in a code block
         const isCodeBlock = element && $isCodeNode(element);
 
-        if (isCodeBlock) {
-          // For code blocks, only exit if the ENTIRE block is empty
+        if (isHeading || isCodeBlock) {
           const textContent = element.getTextContent();
+          const offset = anchor.offset;
+
+          // Check if entire block is empty
           const isEntireBlockEmpty = textContent.trim().length === 0;
 
           if (isEntireBlockEmpty) {
-            // Empty code block - convert to paragraph
+            // Empty block - convert to paragraph
             event?.preventDefault();
             $setBlocksType(selection, () => $createParagraphNode());
             return true;
           }
 
-          // Code block has content - insert line break within code block
+          // Find the current line boundaries
+          // Find start of current line (last newline before cursor, or 0)
+          const lastNewlineBeforeCursor = textContent.lastIndexOf('\n', offset - 1);
+          const lineStart = lastNewlineBeforeCursor === -1 ? 0 : lastNewlineBeforeCursor + 1;
+
+          // Find end of current line (next newline after cursor, or end of text)
+          const nextNewlineAfterCursor = textContent.indexOf('\n', offset);
+          const lineEnd = nextNewlineAfterCursor === -1 ? textContent.length : nextNewlineAfterCursor;
+
+          // Get current line text
+          const currentLineText = textContent.substring(lineStart, lineEnd);
+          const isCurrentLineEmpty = currentLineText.trim().length === 0;
+
+          if (isCurrentLineEmpty) {
+            // Empty line - create new block
+            event?.preventDefault();
+            if (isLastBlock) {
+              onCreateNewBlock();
+            } else {
+              onMoveToNextBlock();
+            }
+            return true;
+          }
+
+          // Non-empty line - insert line break within block
           // We need to explicitly handle this to prevent creating new blocks
           event?.preventDefault();
           selection.insertText('\n');
