@@ -1,0 +1,341 @@
+/* Editor Container */
+.editor-container {
+  width: 100%;
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 40px 60px;
+  min-height: 100vh;
+  background: #090a2a;
+}
+
+/* Block Container */
+.block-container {
+  margin-bottom: 4px;
+  position: relative;
+  transition: all 0.2s ease;
+}
+
+.block-container:hover {
+  background: rgba(18, 20, 84, 0.3);
+  border-radius: 16px;
+}
+
+/* Editor Block */
+.editor-block {
+  background: #121454;
+  border: 2px solid #a7a9f1;
+  border-radius: 16px;
+  padding: 12px 16px;
+  min-height: 44px;
+  transition: all 0.2s ease;
+  position: relative;
+}
+
+.editor-block:focus-within {
+  border-color: #d5d6f6;
+  background: #1b1e7e;
+  box-shadow: 0 0 0 3px rgba(167, 169, 241, 0.1);
+}
+
+.editor-block.empty::before {
+  content: "Type '/' for commands";
+  position: absolute;
+  color: #a7a9f1;
+  opacity: 0.4;
+  pointer-events: none;
+  font-size: 15px;
+}
+
+/* Lexical Editor */
+.editor-input {
+  min-height: 20px;
+  resize: none;
+  font-size: 15px;
+  position: relative;
+  outline: 0;
+  caret-color: #f5eef6;
+}
+
+.editor-paragraph {
+  margin: 0;
+  padding: 0;
+  color: #d5d6f6;
+  line-height: 1.6;
+}
+
+/* Headings */
+.editor-heading-h1 {
+  font-size: 32px;
+  font-weight: 700;
+  margin: 0;
+  padding: 8px 0;
+  color: #f5eef6;
+  line-height: 1.3;
+}
+
+.editor-heading-h2 {
+  font-size: 26px;
+  font-weight: 600;
+  margin: 0;
+  padding: 6px 0;
+  color: #f5eef6;
+  line-height: 1.3;
+}
+
+.editor-heading-h3 {
+  font-size: 20px;
+  font-weight: 600;
+  margin: 0;
+  padding: 4px 0;
+  color: #d5d6f6;
+  line-height: 1.4;
+}
+
+.editor-heading-h4 {
+  font-size: 18px;
+  font-weight: 600;
+  margin: 0;
+  padding: 2px 0;
+  color: #d5d6f6;
+  line-height: 1.4;
+}
+
+.editor-heading-h5 {
+  font-size: 16px;
+  font-weight: 600;
+  margin: 0;
+  color: #d5d6f6;
+  line-height: 1.5;
+}
+
+.editor-heading-h6 {
+  font-size: 14px;
+  font-weight: 600;
+  margin: 0;
+  color: #a7a9f1;
+  line-height: 1.5;
+}
+
+/* Text Formatting */
+.editor-text-bold {
+  font-weight: 600;
+}
+
+.editor-text-italic {
+  font-style: italic;
+}
+
+.editor-text-underline {
+  text-decoration: underline;
+}
+
+.editor-text-strikethrough {
+  text-decoration: line-through;
+}
+
+.editor-text-code {
+  background-color: #252727;
+  padding: 2px 6px;
+  border-radius: 4px;
+  font-family: 'Courier New', Courier, monospace;
+  font-size: 14px;
+  color: #e5e6e6;
+  border: 1px solid #3e4242;
+}
+
+/* Lists */
+.editor-list-ol,
+.editor-list-ul {
+  margin: 0;
+  padding-left: 24px;
+  color: #d5d6f6;
+}
+
+.editor-listitem {
+  margin: 4px 0;
+  line-height: 1.6;
+}
+
+.editor-nested-listitem {
+  list-style-type: none;
+}
+
+/* Quote */
+.editor-quote {
+  margin: 0;
+  padding-left: 16px;
+  border-left: 4px solid #2e33d1;
+  color: #a7a9f1;
+  font-style: italic;
+  line-height: 1.6;
+}
+
+/* Code Block */
+.editor-code {
+  background-color: #191A1A;
+  border: 2px solid #3e4242;
+  border-radius: 24px;
+  padding: 16px 20px;
+  font-family: 'Courier New', Courier, monospace;
+  font-size: 14px;
+  line-height: 1.6;
+  overflow-x: auto;
+  color: #d0d2d2;
+  margin: 8px 0;
+}
+
+/* Code Syntax Highlighting */
+.editor-tokenComment {
+  color: #575c5c;
+}
+
+.editor-tokenPunctuation {
+  color: #abb0b0;
+}
+
+.editor-tokenProperty {
+  color: #2e33d1;
+}
+
+.editor-tokenSelector {
+  color: #a7a9f1;
+}
+
+.editor-tokenOperator {
+  color: #d5d6f6;
+}
+
+.editor-tokenAttr {
+  color: #2e33d1;
+}
+
+.editor-tokenVariable {
+  color: #a7a9f1;
+}
+
+.editor-tokenFunction {
+  color: #d5d6f6;
+}
+
+/* Block Actions */
+.block-actions {
+  position: absolute;
+  left: -40px;
+  top: 50%;
+  transform: translateY(-50%);
+  opacity: 0;
+  transition: opacity 0.2s ease;
+  display: flex;
+  gap: 4px;
+}
+
+.block-container:hover .block-actions {
+  opacity: 1;
+}
+
+.block-action-button {
+  width: 24px;
+  height: 24px;
+  border-radius: 4px;
+  background: #252727;
+  border: 1px solid #3e4242;
+  color: #abb0b0;
+  cursor: grab;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 16px;
+}
+
+.block-action-button:hover {
+  background: #3e4242;
+  color: #d0d2d2;
+  border-color: #575c5c;
+}
+
+/* Page Title */
+.page-title {
+  font-size: 40px;
+  font-weight: 700;
+  color: #f5eef6;
+  margin: 0 0 24px 0;
+  padding: 16px;
+  background: transparent;
+  border: 2px solid transparent;
+  border-radius: 16px;
+  outline: none;
+  width: 100%;
+  transition: all 0.2s ease;
+}
+
+.page-title:focus {
+  border-color: #a7a9f1;
+  background: #121454;
+}
+
+.page-title::placeholder {
+  color: #a7a9f1;
+  opacity: 0.3;
+}
+
+/* Toolbar */
+.toolbar {
+  background: #252727;
+  border: 2px solid #3e4242;
+  border-radius: 16px;
+  padding: 8px 12px;
+  margin-bottom: 16px;
+  display: flex;
+  gap: 4px;
+  flex-wrap: wrap;
+}
+
+.toolbar-button {
+  background: transparent;
+  border: 1px solid transparent;
+  border-radius: 8px;
+  padding: 6px 12px;
+  color: #abb0b0;
+  cursor: pointer;
+  font-size: 14px;
+  transition: all 0.2s ease;
+}
+
+.toolbar-button:hover {
+  background: #3e4242;
+  color: #d0d2d2;
+  border-color: #575c5c;
+}
+
+.toolbar-button.active {
+  background: #1b1e7e;
+  color: #f5eef6;
+  border-color: #a7a9f1;
+}
+
+/* Divider */
+.toolbar-divider {
+  width: 1px;
+  background: #3e4242;
+  margin: 0 4px;
+}
+
+/* Add Block Button */
+.add-block-button {
+  width: 100%;
+  padding: 8px;
+  background: transparent;
+  border: 2px dashed #3e4242;
+  border-radius: 16px;
+  color: #575c5c;
+  cursor: pointer;
+  margin-top: 8px;
+  transition: all 0.2s ease;
+  font-size: 14px;
+}
+
+.add-block-button:hover {
+  border-color: #a7a9f1;
+  color: #a7a9f1;
+  background: rgba(18, 20, 84, 0.3);
+}
