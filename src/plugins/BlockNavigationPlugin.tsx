@@ -63,9 +63,11 @@ export function BlockNavigationPlugin({
             return true;
           }
 
-          // Code block has content - allow default Lexical behavior (multiline)
-          // This will insert a line break within the same code block
-          return false;
+          // Code block has content - insert line break within code block
+          // We need to explicitly handle this to prevent creating new blocks
+          event?.preventDefault();
+          selection.insertText('\n');
+          return true;
         }
 
         // For other multiline components (paragraphs, quotes, lists, etc.)
