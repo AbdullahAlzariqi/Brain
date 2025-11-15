@@ -1,18 +1,18 @@
-import { LexicalComposer } from '@lexical/react/LexicalComposer';
-import { RichTextPlugin } from '@lexical/react/LexicalRichTextPlugin';
-import { ContentEditable } from '@lexical/react/LexicalContentEditable';
-import { HistoryPlugin } from '@lexical/react/LexicalHistoryPlugin';
-import { LexicalErrorBoundary } from '@lexical/react/LexicalErrorBoundary';
-import { HeadingNode, QuoteNode } from '@lexical/rich-text';
-import { ListItemNode, ListNode } from '@lexical/list';
-import { CodeNode } from '@lexical/code';
-import { LinkNode } from '@lexical/link';
-import { ListPlugin } from '@lexical/react/LexicalListPlugin';
-import { LinkPlugin } from '@lexical/react/LexicalLinkPlugin';
+import { useEditor, EditorContent } from '@tiptap/react';
+import Document from '@tiptap/extension-document';
+import Paragraph from '@tiptap/extension-paragraph';
+import Text from '@tiptap/extension-text';
+import Heading from '@tiptap/extension-heading';
+import Blockquote from '@tiptap/extension-blockquote';
+import BulletList from '@tiptap/extension-bullet-list';
+import OrderedList from '@tiptap/extension-ordered-list';
+import ListItem from '@tiptap/extension-list-item';
+import CodeBlock from '@tiptap/extension-code-block';
+import Link from '@tiptap/extension-link';
+import History from '@tiptap/extension-history';
 import { useRef, useEffect } from 'react';
-import theme from '../theme/editorTheme';
-import { BlockNavigationPlugin } from '../plugins/BlockNavigationPlugin';
-import { SlashCommandPlugin } from '../plugins/SlashCommandPlugin';
+import { BlockNavigationExtension } from '../extensions/BlockNavigationExtension';
+import { SlashCommandExtension } from '../extensions/SlashCommandExtension';
 
 interface BlockEditorProps {
   id: string;
@@ -24,7 +24,6 @@ interface BlockEditorProps {
 }
 
 export function BlockEditor({
-  id,
   onCreateNewBlock,
   onMoveToNextBlock,
   isLastBlock,
@@ -32,34 +31,49 @@ export function BlockEditor({
 }: BlockEditorProps) {
   const editorRef = useRef<HTMLDivElement>(null);
 
-  const initialConfig = {
-    namespace: `Block-${id}`,
-    theme,
-    onError: (error: Error) => {
-      console.error(error);
-    },
-    nodes: [
-      HeadingNode,
-      QuoteNode,
-      ListNode,
-      ListItemNode,
-      CodeNode,
-      LinkNode,
+  const editor = useEditor({
+    extensions: [
+      Document,
+      Paragraph,
+      Text,
+      Heading.configure({
+        levels: [1, 2, 3, 4, 5, 6],
+      }),
+      Blockquote,
+      BulletList,
+      OrderedList,
+      ListItem,
+      CodeBlock.configure({
+        HTMLAttributes: {
+          class: 'editor-code',
+        },
+      }),
+      Link.configure({
+        openOnClick: false,
+      }),
+      History,
+      BlockNavigationExtension.configure({
+        onCreateNewBlock,
+        onMoveToNextBlock,
+        isLastBlock,
+      }),
+      SlashCommandExtension,
     ],
-  };
+    content: '',
+    editorProps: {
+      attributes: {
+        class: 'editor-input',
+      },
+    },
+  });
 
   useEffect(() => {
-    if (autoFocus && editorRef.current) {
-      const contentEditable = editorRef.current.querySelector(
-        '[contenteditable="true"]'
-      ) as HTMLElement;
-      if (contentEditable) {
-        setTimeout(() => {
-          contentEditable.focus();
-        }, 0);
-      }
+    if (autoFocus && editor) {
+      setTimeout(() => {
+        editor.commands.focus();
+      }, 0);
     }
-  }, [autoFocus]);
+  }, [autoFocus, editor]);
 
   return (
     <div className="block-container">
@@ -76,26 +90,7 @@ export function BlockEditor({
         </button>
       </div>
       <div className="editor-block" ref={editorRef}>
-        <LexicalComposer initialConfig={initialConfig}>
-          <div style={{ position: 'relative' }}>
-            <RichTextPlugin
-              contentEditable={
-                <ContentEditable className="editor-input" />
-              }
-              placeholder={null}
-              ErrorBoundary={LexicalErrorBoundary}
-            />
-            <HistoryPlugin />
-            <ListPlugin />
-            <LinkPlugin />
-            <BlockNavigationPlugin
-              onCreateNewBlock={onCreateNewBlock}
-              onMoveToNextBlock={onMoveToNextBlock}
-              isLastBlock={isLastBlock}
-            />
-            <SlashCommandPlugin />
-          </div>
-        </LexicalComposer>
+        <EditorContent editor={editor} />
       </div>
     </div>
   );
