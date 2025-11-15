@@ -182,6 +182,8 @@
   overflow-x: auto;
   color: #d0d2d2;
   margin: 8px 0;
+  white-space: pre-wrap;
+  display: block;
 }
 
 /* Code Syntax Highlighting */

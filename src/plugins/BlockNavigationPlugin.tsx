@@ -52,40 +52,19 @@ export function BlockNavigationPlugin({
         const isCodeBlock = element && $isCodeNode(element);
 
         if (isCodeBlock) {
-          // For code blocks, check if the current line is empty
-          // Get the text content and cursor position
+          // For code blocks, only exit if the ENTIRE block is empty
           const textContent = element.getTextContent();
-          const offset = anchor.offset;
+          const isEntireBlockEmpty = textContent.trim().length === 0;
 
-          // Find the current line by looking at text before and after cursor
-          const textBeforeCursor = textContent.substring(0, offset);
-          const textAfterCursor = textContent.substring(offset);
-
-          // Get the current line content
-          const lastNewlineBeforeCursor = textBeforeCursor.lastIndexOf('\n');
-          const firstNewlineAfterCursor = textAfterCursor.indexOf('\n');
-
-          const lineStart = lastNewlineBeforeCursor === -1 ? 0 : lastNewlineBeforeCursor + 1;
-          const lineEnd = firstNewlineAfterCursor === -1
-            ? textContent.length
-            : offset + firstNewlineAfterCursor;
-
-          const currentLineText = textContent.substring(lineStart, lineEnd);
-          const isCurrentLineEmpty = currentLineText.trim().length === 0;
-
-          if (isCurrentLineEmpty) {
-            // Empty line in code block - exit code block and create paragraph
+          if (isEntireBlockEmpty) {
+            // Empty code block - convert to paragraph
             event?.preventDefault();
-
-            // Convert current block to paragraph
             $setBlocksType(selection, () => $createParagraphNode());
-
-            // Create new block
-            onCreateNewBlock();
             return true;
           }
 
-          // Current line has text, allow default behavior (add line break in code)
+          // Code block has content - allow default Lexical behavior (multiline)
+          // This will insert a line break within the same code block
           return false;
         }
 
