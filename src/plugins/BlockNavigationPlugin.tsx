@@ -5,8 +5,11 @@ import {
   KEY_ENTER_COMMAND,
   $getSelection,
   $isRangeSelection,
+  $createParagraphNode,
 } from 'lexical';
 import { $isHeadingNode } from '@lexical/rich-text';
+import { $isCodeNode } from '@lexical/code';
+import { $setBlocksType } from '@lexical/selection';
 
 interface BlockNavigationPluginProps {
   onCreateNewBlock: () => void;
@@ -39,21 +42,41 @@ export function BlockNavigationPlugin({
         const isHeading = element && $isHeadingNode(element);
 
         if (isHeading) {
-          // Headings are single-line, always create new block
+          // Headings are single-line, always create new paragraph block
           event?.preventDefault();
           onCreateNewBlock();
           return true;
         }
 
-        // For multiline components (paragraphs, lists, code, quotes, etc.)
-        // Only create a new block if the CURRENT LINE is empty
+        // Check if we're in a code block
+        const isCodeBlock = element && $isCodeNode(element);
 
-        // Get the current element's text content
+        if (isCodeBlock) {
+          // For code blocks, only exit if the ENTIRE block is empty
+          const textContent = element.getTextContent();
+          const isEntireBlockEmpty = textContent.trim().length === 0;
+
+          if (isEntireBlockEmpty) {
+            // Empty code block - convert to paragraph
+            event?.preventDefault();
+            $setBlocksType(selection, () => $createParagraphNode());
+            return true;
+          }
+
+          // Code block has content - insert line break within code block
+          // We need to explicitly handle this to prevent creating new blocks
+          event?.preventDefault();
+          selection.insertText('\n');
+          return true;
+        }
+
+        // For other multiline components (paragraphs, quotes, lists, etc.)
+        // Only create a new block if the entire element is empty
         const currentElementText = element?.getTextContent() || '';
-        const isCurrentLineEmpty = currentElementText.trim().length === 0;
+        const isElementEmpty = currentElementText.trim().length === 0;
 
-        if (isCurrentLineEmpty) {
-          // Current line is empty, create new block
+        if (isElementEmpty) {
+          // Element is empty, create new block
           event?.preventDefault();
           if (isLastBlock) {
             onCreateNewBlock();
@@ -63,8 +86,7 @@ export function BlockNavigationPlugin({
           return true;
         }
 
-        // Current line has text, allow default multiline behavior
-        // This will create a new paragraph/line within the same block
+        // Element has text, allow default multiline behavior
         return false;
       },
       COMMAND_PRIORITY_LOW
