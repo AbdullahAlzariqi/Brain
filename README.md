@@ -1,6 +1,6 @@
 # Notion-like Text Editor
 
-A modern, block-based text editor built with React, TypeScript, and Lexical, featuring a custom dark color scheme inspired by Notion's interface.
+A modern, block-based text editor built with React, TypeScript, and TipTap, featuring a custom dark color scheme inspired by Notion's interface.
 
 ## Features
 
@@ -70,12 +70,11 @@ src/
 ├── components/
 │   ├── BlockEditor.tsx      # Individual block editor component
 │   └── NotionEditor.tsx     # Main editor managing multiple blocks
-├── plugins/
-│   ├── BlockNavigationPlugin.tsx  # Enter key behavior logic
-│   └── SlashCommandPlugin.tsx     # Slash command menu
+├── extensions/
+│   ├── BlockNavigationExtension.ts  # Enter key behavior logic
+│   └── SlashCommandExtension.tsx    # Slash command menu
 ├── theme/
-│   ├── colors.ts            # Color scheme configuration
-│   └── editorTheme.ts       # Lexical editor theme
+│   └── colors.ts            # Color scheme configuration
 ├── styles/
 │   └── editor.css           # Editor styling
 ├── App.tsx                  # Main app component
@@ -84,9 +83,9 @@ src/
 
 ## Technology Stack
 
-- **React 18**: Modern React with hooks
+- **React 19**: Modern React with hooks
 - **TypeScript**: Type-safe development
-- **Lexical**: Meta's extensible text editor framework
+- **TipTap**: Headless, extensible rich text editor framework
 - **Vite**: Fast build tool and dev server
 
 ## Usage

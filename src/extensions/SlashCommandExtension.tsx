@@ -1,4 +1,4 @@
-import { Extension } from '@tiptap/core';
+import { Extension, Editor } from '@tiptap/core';
 import { ReactRenderer } from '@tiptap/react';
 import { PluginKey } from '@tiptap/pm/state';
 import Suggestion from '@tiptap/suggestion';
@@ -10,7 +10,7 @@ interface SlashCommand {
   title: string;
   description: string;
   keywords: string[];
-  onSelect: (editor: any) => void;
+  onSelect: (editor: Editor) => void;
 }
 
 const commands: SlashCommand[] = [

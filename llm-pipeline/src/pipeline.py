@@ -1,6 +1,7 @@
 import os
 import json
 import time
+import logging
 import pandas as pd
 from typing import List, Optional
 from src.schemas import (
@@ -8,6 +9,8 @@ from src.schemas import (
     RunLevelLog, DevMetrics, GenParams, TrainParams
 )
 from src.llm_client import StudentClient, JudgeClient, TeacherClient
+
+logger = logging.getLogger(__name__)
 
 class Pipeline:
     def __init__(self, dev_set_path: str = "data/dev_set.json", logs_path: str = "logs"):
@@ -25,12 +28,12 @@ class Pipeline:
         from src.data import load_dataset
         return load_dataset(self.dev_set_path)
 
-    def evaluate(self, run_id: str, checkpoint: str, notes: str = "", train_params: Optional[TrainParams] = None) -> RunLevelLog:
-        print(f"Starting evaluation for {run_id}...")
+    def evaluate(self, run_id: str, checkpoint: str, notes: str = "", train_params: Optional[TrainParams] = None) -> Optional[RunLevelLog]:
+        logger.info(f"Starting evaluation for {run_id}...")
         dev_set = self.load_dev_set()
         if not dev_set:
-            print("Dev set empty or not found.")
-            # Return empty/failed log
+            logger.warning("Dev set empty or not found.")
+            # Return None if dev set is empty
             return None
 
         records = []
@@ -114,14 +117,14 @@ class Pipeline:
         Uses the Teacher model to generate new training data or refresh the mix.
         For this implementation, we will mock the expansion of the dataset.
         """
-        print(f"Refreshing training data for {version} using Teacher...")
+        logger.info(f"Refreshing training data for {version} using Teacher...")
         # In a real scenario:
         # new_items = self.teacher.generate_synthetic_data(topic="harder_cases")
         # save_dataset(new_items, f"data/train_{version}.json")
         time.sleep(0.5)
 
     def train_step(self, run_id: str, train_params: TrainParams) -> str:
-        print(f"Mocking training for {run_id}...")
+        logger.info(f"Mocking training for {run_id}...")
         # In a real scenario, this would call Unsloth training script
         # subprocess.run(["python", "src/train_unsloth.py", ...])
         time.sleep(1) # Simulate work

@@ -38,24 +38,6 @@ export function NotionEditor() {
     }
   };
 
-  const handleRemoveBlock = (blockId: string) => {
-    if (blocks.length === 1) {
-      // Don't remove the last block, just clear it
-      return;
-    }
-
-    const blockIndex = blocks.findIndex((b) => b.id === blockId);
-    const newBlocks = blocks.filter((b) => b.id !== blockId);
-    setBlocks(newBlocks);
-
-    // Focus previous block or next block
-    if (blockIndex > 0) {
-      setFocusedBlockId(newBlocks[blockIndex - 1].id);
-    } else if (newBlocks.length > 0) {
-      setFocusedBlockId(newBlocks[0].id);
-    }
-  };
-
   const handleAddBlock = () => {
     const newBlock: Block = {
       id: crypto.randomUUID(),
@@ -79,10 +61,8 @@ export function NotionEditor() {
         {blocks.map((block, index) => (
           <BlockEditor
             key={block.id}
-            id={block.id}
             onCreateNewBlock={() => handleCreateNewBlock(block.id)}
             onMoveToNextBlock={() => handleMoveToNextBlock(block.id)}
-            onRemoveBlock={() => handleRemoveBlock(block.id)}
             isLastBlock={index === blocks.length - 1}
             autoFocus={focusedBlockId === block.id}
           />

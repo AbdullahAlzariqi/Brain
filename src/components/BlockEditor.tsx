@@ -15,10 +15,8 @@ import { BlockNavigationExtension } from '../extensions/BlockNavigationExtension
 import { SlashCommandExtension } from '../extensions/SlashCommandExtension';
 
 interface BlockEditorProps {
-  id: string;
   onCreateNewBlock: () => void;
   onMoveToNextBlock: () => void;
-  onRemoveBlock: () => void;
   isLastBlock: boolean;
   autoFocus?: boolean;
 }
